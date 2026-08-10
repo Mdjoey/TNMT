@@ -1,0 +1,12 @@
+# Môi trường ảo Python
+venv/
+*.pyc
+__pycache__/
+
+# Database & File cấu hình cá nhân
+*.sqlite3
+.env
+
+# VS Code & Thư mục tạm
+.vscode/
+.DS_Store
