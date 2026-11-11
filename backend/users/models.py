@@ -9,6 +9,7 @@ class User(AbstractUser):
 
     email = models.EmailField(unique=True, verbose_name="Email")
     phone_number = models.CharField(max_length=20, blank=True, null=True, verbose_name="Số điện thoại")
+    address = models.CharField(max_length=255, blank=True, null=True, verbose_name="Địa chỉ")
     role = models.CharField(
         max_length=15, 
         choices=Role.choices, 
@@ -18,7 +19,7 @@ class User(AbstractUser):
     otp_code = models.CharField(max_length=6, blank=True, null=True, verbose_name="Mã OTP")
     is_verified = models.BooleanField(default=False, verbose_name="Đã xác thực OTP")
 
-    USERNAME_FIELD = 'email'  # Dùng Email để đăng nhập thay cho username
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):

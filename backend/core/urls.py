@@ -1,38 +1,25 @@
-"""
-URL configuration for core project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from farms.views import FarmViewSet, ProductViewSet
+
+from farms.views import ProductViewSet, FarmViewSet, BlogPostViewSet  # 1. Thêm BlogPostViewSet
 from traceability.views import BatchViewSet
+from orders.views import OrderViewSet
 
 router = DefaultRouter()
-router.register(r'farms', FarmViewSet)
-router.register(r'products', ProductViewSet)
-router.register(r'batches', BatchViewSet)
+router.register(r'farms', FarmViewSet, basename='farm')
+router.register(r'products', ProductViewSet, basename='product')
+router.register(r'batches', BatchViewSet, basename='batch')
+router.register(r'orders', OrderViewSet, basename='order')
+router.register(r'posts', BlogPostViewSet, basename='blog-posts')    # 2. Đăng ký posts vào router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    # Auth JWT APIs
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # API Đăng nhập lấy Token
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # API đổi Token mới
-    
-    # Business APIs
-    path('api/', include(router.urls)),
+    path('api/', include(router.urls)),                              # Giờ đây /api/posts/ đã chính thức hoạt động
+    path('api/users/', include('users.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
